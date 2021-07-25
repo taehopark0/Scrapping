@@ -15,7 +15,7 @@ options = webdriver.ChromeOptions()
 options.add_argument("headless")
 
 # chromedriver로 웹사이트 열기
-driver= webdriver.Chrome("/Users/taehopark/PycharmProjects/dalchaebi/Scrapping/HIDOC/chromedriver",options=options)
+driver= webdriver.Chrome("/Users/taehopark/PycharmProjects/dalchaebi/Scrapping/HIDOC/chromedriver")
 driver.get("https://www.hidoc.co.kr/healthqna/part/list?code=PY000&page=1")
 # scrap 할 내용을 page source로 저장 (html) 정보를 리스트로 저장
 html = driver.page_source
@@ -31,12 +31,11 @@ lst_titles=[]
 lst_questions=[]
 lst_question_time=[]
 lst_name_docs=[]
-#lst_name_hospitals =[]
 lst_answers=[]
 
 URL = "https://www.hidoc.co.kr/healthqna/part/list?code=PY000&page="
 
-for i in range(1,101):
+for i in range(218,219):
     #Selenium용 Parsing
     URL_page = URL+str(i)
     driver.get(URL_page)
@@ -57,37 +56,27 @@ for i in range(1,101):
         if titles in lst_titles:
             if num_answer !=2:
                 answers = url_soup.select('div[class="box_type1 hidoc_answer"]>div[class="answer_body"]>div[class="cont"]>div[class="desc"]')[2].get_text()
-#                name_hospitals = url_soup.select('span[class= "txt_clinic"]')[1]
-#                if type(name_hospitals) == bs4.element.Tag:
-#                    name_hospitals = name_hospitals.get_text()
-#                else:
-#                    name_hospitals = '0'
             else:
                 answers = url_soup.select(
                     'div[class="box_type1 hidoc_answer"]>div[class="answer_body"]>div[class="cont"]>div[class="desc"]')[
                     0].get_text()
-#                name_hospitals = url_soup.find("span", attrs={"class": "txt_clinic"})
-#                if type(name_hospitals) == bs4.element.Tag:
-#                    name_hospitals = name_hospitals.text
-#                else:
-#                    name_hospitals = '0'
         elif titles not in lst_titles:
             answers = url_soup.select('div[class="box_type1 hidoc_answer"]>div[class="answer_body"]>div[class="cont"]>div[class="desc"]')[0].get_text()
-#            name_hospitals = url_soup.find("span", attrs={"class": "txt_clinic"})
-#            if type(name_hospitals) == bs4.element.Tag:
-#                name_hospitals = name_hospitals.text
-#            else:
-#                name_hospitals = '0'
         lst_titles.append(titles)
         lst_question_time.append(question_time)
         lst_questions.append(questions)
-#        lst_name_hospitals.append(name_hospitals)
         lst_answers.append(answers)
-
         driver.back()
     print(i)
 df = pd.DataFrame(zip(lst_titles,lst_question_time,lst_questions,lst_answers))
 df.rename(columns={0:'제목',1:'질문 시간',2:'질문',3:'답변'},inplace=True)
 df.to_excel("hidoc.xlsx",index=False)
+index = len(df)
+with open("hidoc_questions.txt",'w') as f:
+    for j in range(index):
+        f.write(df['질문'][j]+'\n')
+with open("hidoc_answer.txt",'w') as f:
+    for i in range(index):
+        f.write(df['답변'][i]+'\n')
 print(df)
 driver.quit()

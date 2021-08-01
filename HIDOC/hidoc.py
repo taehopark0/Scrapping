@@ -15,7 +15,7 @@ options = webdriver.ChromeOptions()
 options.add_argument("headless")
 
 # chromedriver로 웹사이트 열기
-driver= webdriver.Chrome("/Users/taehopark/PycharmProjects/dalchaebi/Scrapping/HIDOC/chromedriver")
+driver= webdriver.Chrome("/Users/taehopark/PycharmProjects/dalchaebi/Scrapping/HIDOC/chromedriver",options=options)
 driver.get("https://www.hidoc.co.kr/healthqna/part/list?code=PY000&page=1")
 # scrap 할 내용을 page source로 저장 (html) 정보를 리스트로 저장
 html = driver.page_source
@@ -35,9 +35,9 @@ lst_answers=[]
 
 URL = "https://www.hidoc.co.kr/healthqna/part/list?code=PY000&page="
 
-for i in range(218,219):
+for i in range(1001,2001):
     #Selenium용 Parsing
-    URL_page = URL+str(i)
+    URL_page = URL+str(page_num-i)
     driver.get(URL_page)
     html = driver.page_source
     bs = bs4.BeautifulSoup(html, "html.parser")
@@ -67,7 +67,7 @@ for i in range(218,219):
         lst_questions.append(questions)
         lst_answers.append(answers)
         driver.back()
-    print(i)
+    print(page_num-i)
 df = pd.DataFrame(zip(lst_titles,lst_question_time,lst_questions,lst_answers))
 df.rename(columns={0:'제목',1:'질문 시간',2:'질문',3:'답변'},inplace=True)
 df.to_excel("hidoc.xlsx",index=False)

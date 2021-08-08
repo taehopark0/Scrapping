@@ -26,10 +26,11 @@ for i in range(len(df)):
     answer_list.append(kkma.nouns(df['답변'][i]))
     question_list.append(kkma.nouns(df['질문'][i]))
 
-print(title_list)
-print(answer_list)
-print(question_list)
+df = pd.DataFrame(zip(title_list,question_list,answer_list))
+df.rename(columns={0:'제목',1:'질문',2:'답변'},inplace=True)
+df.to_excel("token_list.xlsx",index=False)
 
+print(df)
 #m = Mecab()
 #print(m.pos(df['답변'][0])) :pos로 되는지 확인
 #print(type(m.pos(df['답변'][0]))) : List

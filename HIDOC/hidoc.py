@@ -15,18 +15,17 @@ options = webdriver.ChromeOptions()
 options.add_argument("headless")
 
 # chromedriver로 웹사이트 열기
-driver= webdriver.Chrome("/Users/taehopark/PycharmProjects/dalchaebi/Scrapping/HIDOC/chromedriver",options=options)
+driver= webdriver.Chrome("/Users/taehopark/PycharmProjects/dalchaebi/Scrapping/HIDOC/chromedriver",options= options)
 driver.get("https://www.hidoc.co.kr/healthqna/part/list?code=PY000&page=1")
 # scrap 할 내용을 page source로 저장 (html) 정보를 리스트로 저장
 html = driver.page_source
 bs= bs4.BeautifulSoup(html,"html.parser")
-total_number= bs.select('div[class="tit_summary"]>strong')[0].text.replace("산부인과","")
+total_number= bs.select('div.tit_summary > strong')[0].text.replace("산부인과","")
 total_number = int(total_number.replace(",",""))
 page_num= (total_number//7)+1
 print(page_num)
 
 # 빈 리스트 생성
-
 lst_titles=[]
 lst_questions=[]
 lst_question_time=[]
@@ -35,14 +34,13 @@ lst_answers=[]
 
 URL = "https://www.hidoc.co.kr/healthqna/part/list?code=PY000&page="
 
-for i in range(1001,2001):
+for i in range(1501,2001):
     #Selenium용 Parsing
     URL_page = URL+str(page_num-i)
     driver.get(URL_page)
     html = driver.page_source
     bs = bs4.BeautifulSoup(html, "html.parser")
     elems = driver.find_elements_by_class_name("desc")
-
     for x in range(0,len(elems)):
         elems=driver.find_elements_by_class_name("desc")
         elems[x].click()
@@ -50,18 +48,17 @@ for i in range(1001,2001):
         url_soup = BeautifulSoup(url_requests,'html.parser')
         titles=url_soup.select_one("strong.tit").text
         question_time = url_soup.select_one("span.txt_time").text
-        questions = url_soup.select('div[class="box_type1 view_question"]>div[class="inner"]>div[class="desc"]>p')[0].get_text()
-        num_answer = len(url_soup.select('div[class="box_type1 hidoc_answer"]>div[class="answer_body"]>div[class="cont"]>div[class="desc"]'))
-
+        questions = url_soup.select('div[class="box_type1 view_question"] > div[class="inner"] > div[class="desc"] > p')[0].get_text()
+        num_answer = len(url_soup.select('div[class="box_type1 hidoc_answer"] > div[class="answer_body"] > div[class="cont"] > div[class="desc"]'))
         if titles in lst_titles:
             if num_answer !=2:
-                answers = url_soup.select('div[class="box_type1 hidoc_answer"]>div[class="answer_body"]>div[class="cont"]>div[class="desc"]')[2].get_text()
+                answers = url_soup.select('div[class="box_type1 hidoc_answer"] > div[class="answer_body"] > div[class="cont"] > div[class="desc"]')[2].get_text()
             else:
                 answers = url_soup.select(
-                    'div[class="box_type1 hidoc_answer"]>div[class="answer_body"]>div[class="cont"]>div[class="desc"]')[
+                    'div[class="box_type1 hidoc_answer"] > div[class="answer_body"] > div[class="cont"] > div[class="desc"]')[
                     0].get_text()
         elif titles not in lst_titles:
-            answers = url_soup.select('div[class="box_type1 hidoc_answer"]>div[class="answer_body"]>div[class="cont"]>div[class="desc"]')[0].get_text()
+            answers = url_soup.select('div[class="box_type1 hidoc_answer"] > div[class="answer_body"] > div[class="cont"] > div[class="desc"]')[0].get_text()
         lst_titles.append(titles)
         lst_question_time.append(question_time)
         lst_questions.append(questions)

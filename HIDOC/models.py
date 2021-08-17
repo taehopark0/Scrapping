@@ -48,10 +48,17 @@ nb_classes = len(dics)
 targets = list(dics.values())
 one_hot_targets = np.eye(nb_classes)[targets]
 
-# 원-핫 인코딩을 title, question, answer에 적용
-def one_hot_transform(x):
-    item_list = x.replace("'","").replace("[","").replace("]","").split(',')
-    dic_new = {}
-    for item in item_list:
-        idx_number = dics[item]
-        
+#BOW
+BOW_dics ={}
+for word in list_combined:
+    if word not in BOW_dics.keys():
+        BOW_dics[word] = 0
+for i in range(len(df_combined)):
+    title_raw_BOW = df_combined['제목'][i].replace("'", "").replace("[", "").replace("]", "").split(',')
+    for title in title_raw_BOW:
+        if title in dics.keys():
+            BOW_dics[title] = BOW_dics[title]+1
+print(BOW_dics)
+
+
+

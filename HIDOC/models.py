@@ -53,12 +53,25 @@ BOW_dics ={}
 for word in list_combined:
     if word not in BOW_dics.keys():
         BOW_dics[word] = 0
+
+def one_hot_encoding(word, word2index):
+    one_hot_vector = [0] * (len(word2index))
+    index = word2index[word]
+    one_hot_vector[index] = 1
+    return one_hot_vector
+
+new_list=[]
 for i in range(len(df_combined)):
     title_raw_BOW = df_combined['제목'][i].replace("'", "").replace("[", "").replace("]", "").split(',')
-    for title in title_raw_BOW:
-        if title in dics.keys():
-            BOW_dics[title] = BOW_dics[title]+1
-print(BOW_dics)
+    if '' in title_raw_BOW:
+        title_raw_BOW.remove('')
+
+    if len(title_raw_BOW) == 0:
+        new_list.append([0]*len(df_combined))
+    else:
+        for j in range(len(title_raw_BOW)):
+            new_list.append(one_hot_encoding(title_raw_BOW[j],BOW_dics))
+print(new_list)
 
 
 

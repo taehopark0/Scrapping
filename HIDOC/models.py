@@ -61,17 +61,21 @@ def one_hot_encoding(word, word2index):
     return one_hot_vector
 
 new_list=[]
+new_dic ={}
 for i in range(len(df_combined)):
     title_raw_BOW = df_combined['제목'][i].replace("'", "").replace("[", "").replace("]", "").split(',')
     if '' in title_raw_BOW:
         title_raw_BOW.remove('')
 
     if len(title_raw_BOW) == 0:
-        new_list.append([0]*len(df_combined))
+        new_dic[()] = [0]*len(df_combined)
+
     else:
         for j in range(len(title_raw_BOW)):
             new_list.append(one_hot_encoding(title_raw_BOW[j],BOW_dics))
-print(new_list)
+        new_dic[tuple(title_raw_BOW)] = new_list
+
+print(new_dic)
 
 
 

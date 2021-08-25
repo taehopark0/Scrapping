@@ -34,7 +34,7 @@ lst_answers=[]
 
 URL = "https://www.hidoc.co.kr/healthqna/part/list?code=PY000&page="
 
-for i in range(1501,2001):
+for i in range(2501,3001):
     #Selenium용 Parsing
     URL_page = URL+str(page_num-i)
     driver.get(URL_page)

@@ -5,7 +5,7 @@ from konlpy.tag import Kkma
 
 # 데이터 전처리
 excel = pd.read_excel(
-    "/Users/taehopark/PycharmProjects/dalchaebi/Scrapping/HIDOC/hidoc (1640~2139).xlsx",engine='openpyxl')
+    "/Users/taehopark/PycharmProjects/dalchaebi/Scrapping/HIDOC/hidoc (1140~1639).xlsx",engine='openpyxl')
 df = pd.DataFrame(excel)
 tokenizer = Mecab()
 kkma =Kkma()
